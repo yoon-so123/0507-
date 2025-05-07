@@ -1,183 +1,103 @@
-const catsData = [
-    {
-        emotionTags: ["moody"],
-        isGif: false,
-        image: "angry.jpeg",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["moody", "insomniac"],
-        isGif: false,
-        image: "angry2.jpeg",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["moody"],
-        isGif: false,
-        image: "angry3.jpeg",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["confused", "sad"],
-        isGif: false,
-        image: "confused.jpeg",
-        alt: "A cat looking confused",
-    },
-    {
-        emotionTags: ["dominant", "moody"],
-        isGif: false,
-        image: "dominant.jpeg",
-        alt: "A cat looking dominant",
-    },
-    {
-        emotionTags: ["happy", "relaxed"],
-        isGif: false,
-        image: "happy.jpeg",
-        alt: "A cat looking happy",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: false,
-        image: "hungry.jpeg",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: false,
-        image: "hungry1.jpeg",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["insomniac"],
-        isGif: false,
-        image: "insomnia.jpeg",
-        alt: "A cat looking insomniac",
-    },
-    {
-        emotionTags: ["insomniac"],
-        isGif: false,
-        image: "insomnia1.jpeg",
-        alt: "A cat looking insomniac",
-    },
-    {
-        emotionTags: ["relaxed"],
-        isGif: false,
-        image: "lazy.jpeg",
-        alt: "A cat looking lazy",
-    },
-    {
-        emotionTags: ["scared"],
-        isGif: false,
-        image: "nervous.jpeg",
-        alt: "A cat looking nervous",
-    },
-    {
-        emotionTags: ["sad"],
-        isGif: false,
-        image: "sad.jpeg",
-        alt: "A cat looking sad",
-    },
-    {
-        emotionTags: ["sad", "moody"],
-        isGif: false,
-        image: "sad1.jpeg",
-        alt: "A cat looking sad",
-    },
-    {
-        emotionTags: ["moody"],
-        isGif: true,
-        image: "angry.gif",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["moody"],
-        isGif: true,
-        image: "angry2.gif",
-        alt: "A cat looking angry",
-    },
-    {
-        emotionTags: ["confused"],
-        isGif: true,
-        image: "confused2.gif",
-        alt: "A cat looking confused",
-    },
-    {
-        emotionTags: ["dominant"],
-        isGif: true,
-        image: "dominant.gif",
-        alt: "A cat looking dominant",
-    },
-    {
-        emotionTags: ["happy"],
-        isGif: true,
-        image: "happy.gif",
-        alt: "A cat looking happy",
-    },
-    {
-        emotionTags: ["hungry", "sad", "confused"],
-        isGif: true,
-        image: "confused.gif",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: true,
-        image: "hungry.gif",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: true,
-        image: "hungry2.gif",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["insomniac", "scared"],
-        isGif: true,
-        image: "insomnia2.gif",
-        alt: "A cat looking insomniac",
-    },
-    {
-        emotionTags: ["relaxed"],
-        isGif: true,
-        image: "lazy.gif",
-        alt: "A cat looking relaxed",
-    },
-    {
-        emotionTags: ["relaxed"],
-        isGif: true,
-        image: "relaxed2.gif",
-        alt: "A cat looking relaxed",
-    },
-    {
-        emotionTags: ["scared", "sad"],
-        isGif: true,
-        image: "nervous.gif",
-        alt: "A cat looking nervous",
-    },
-    {
-        emotionTags: ["scared"],
-        isGif: true,
-        image: "nervous2.gif",
-        alt: "A cat looking scared",
-    },
-    {
-        emotionTags: ["sad"],
-        isGif: true,
-        image: "sad.gif",
-        alt: "A cat looking sad",
-    },
-]
+import { catsData } from "./data.js";
 
-function getEmotionsArray(cats){
-    const emotionsArray = []
-    for (let i = 0; i < cats.length; i++){
-        for (let j=0; j < cats[i].emotionTags.length; j++){
-                emotionsArray.push(cats[i].emotionTags[j])
-        }
-    }
-console.log(emotionsArray)
+const emotionRadios = document.getElementById("emotion-radios");
+const getImageBtn = document.getElementById("get-image-btn");
+const gifsOnlyOption = document.getElementById("gifs-only-option");
+const memeModal = document.getElementById("meme-modal");
+const memeModalInner = document.getElementById("meme-modal-inner");
+
+getImageBtn.addEventListener("click", renderCat); //콜백은 괄호괄호 넣으면 안됨.
+
+emotionRadios.addEventListener("change", function (e) {
+  const radios = document.getElementsByClassName("radio");
+  for (let radio of radios) {
+    radio.classList.remove("highlight");
+  }
+  const selectedElement = document.getElementById(e.target.id);
+  const selectedParentEl = selectedElement.parentElement;
+  selectedParentEl.classList.add("highlight");
+});
+
+function renderCat() {
+  const catObject = getSingleCatObject(); //html 의 modal 에 띄워야함.
+  memeModalInner.innerHTML = `
+  <img
+  class="cat-img"
+  src="./images/${catObject.image}"
+  >`;
+
+  memeModal.style.display = "flex";
 }
 
-// getEmotionsArray(catsData)
+function getSingleCatObject() {
+  //고양이 사진이 여러장 나올수도있고 없을수도잇음.
+  //어찌됐든 한장만 랜덤으로 뽑을거임.
+  const catsArray = getMatchingCatsArray(); //v필터링된 애를 들고오는것.
+  if (catsArray.length === 1) {
+    return catsArray[0];
+  } else {
+    const randomNumber = Math.floor(Math.random() * catsArray.length);
+    return catsArray[randomNumber];
+  }
+}
 
+function getMatchingCatsArray() {
+  const isGif = gifsOnlyOption.cheched; //체크유무  true false
+  const selectedEmotion = document.querySelector(
+    `input[type="radio"]:checked`
+  ).value;
+
+  const getMatchingCatsArray = catsData.filter(
+    function (cat) {
+      if (isGif) {
+        //체크박스 체크 됐는지 여부
+        return cat.emotionTags.includes(selectedEmotion) && cat.isGif; //cat.isGif는 catData 에 isGif가 true 인지.
+      } else {
+        return cat.emotionTags.includes(selectedEmotion);
+      }
+    }
+    // return cat.emotionTags.includes(selectedEmotion);
+  );
+  console.log(getMatchingCatsArray);
+}
+
+function getEmotionsArray(cats) {
+  const emotionsArray = [];
+  for (let item of cats) {
+    for (let emotion of item.emotionTags) {
+      if (!emotionsArray.includes(emotion)) {
+        emotionsArray.push(emotion);
+      }
+    }
+  }
+  return emotionsArray;
+}
+
+function renderEmotionRadios(cats) {
+  const emotions = getEmotionsArray(cats);
+  let radioItems = "";
+  for (let emotion of emotions) {
+    radioItems += `
+    <div class="radio">
+    <label for="${emotion}">${emotion}</label>
+    <input 
+    type="radio"
+    id="${emotion}"
+    value="${emotion}"
+    name="emotions">
+    </div>
+    `;
+  }
+  emotionRadios.innerHTML = radioItems;
+}
+renderEmotionRadios(catsData);
+
+//Get Image 버튼을 누르면
+//getMatchingCatsArray()라는 함수가 동작하는데
+//라디오에서 선택된 애의 값(내용 예: moody) 콘솔에 출력하기
+//이벤트리스너 (이벤트이름, 콜벡함수이름)
+//function 콜백함수이름() {}
+
+//let 새로운 배열
+//const 새로운 배열 이름 = 기존배열이름.filter(function (매개변수-이름알아서짓기){
+// return 새로운 배열에 추가되는 조건식})
