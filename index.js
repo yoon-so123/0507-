@@ -5,6 +5,12 @@ const getImageBtn = document.getElementById("get-image-btn");
 const gifsOnlyOption = document.getElementById("gifs-only-option");
 const memeModal = document.getElementById("meme-modal");
 const memeModalInner = document.getElementById("meme-modal-inner");
+const memeModalCloseBtn = document.getElementById("meme-modal-close-btn");
+
+memeModalCloseBtn.addEventListener("click", closeModal);
+function closeModal() {
+  memeModal.style.display = "none";
+}
 
 getImageBtn.addEventListener("click", renderCat); //콜백은 괄호괄호 넣으면 안됨.
 
@@ -13,8 +19,8 @@ emotionRadios.addEventListener("change", function (e) {
   for (let radio of radios) {
     radio.classList.remove("highlight");
   }
-  const selectedElement = document.getElementById(e.target.id);
-  const selectedParentEl = selectedElement.parentElement;
+  const selectedElement = document.getElementById(e.target.id); //인풋라디오
+  const selectedParentEl = selectedElement.parentElement; //인풋라디오의 부모 디브
   selectedParentEl.classList.add("highlight");
 });
 
@@ -42,7 +48,7 @@ function getSingleCatObject() {
 }
 
 function getMatchingCatsArray() {
-  const isGif = gifsOnlyOption.cheched; //체크유무  true false
+  const isGif = gifsOnlyOption.checked; //체크유무  true false
   const selectedEmotion = document.querySelector(
     `input[type="radio"]:checked`
   ).value;
@@ -101,3 +107,13 @@ renderEmotionRadios(catsData);
 //let 새로운 배열
 //const 새로운 배열 이름 = 기존배열이름.filter(function (매개변수-이름알아서짓기){
 // return 새로운 배열에 추가되는 조건식})
+
+//for of
+//import export
+//radio & checkbox inputs
+//querySelector
+//getElementsByClassName
+//classList.remove classList.add
+//includes()
+//.filter
+//.parentElement
